@@ -59,7 +59,7 @@ export class EditingItem extends React.Component<EditingItemProps> {
               value={machine.host}
               onChange={value => actions.installer.updateMachine({ host: value }, id)}
             />
-            <Text theme="text">注意：要求当前运行安装器所在设备网络可达目标机器</Text>
+            <Text theme="text">注意：要求当前运行安装器所在设备网络可达目标机器；支持输入多个机器IP，用“;”分隔</Text>
           </Form.Item>
           <Form.Item
             label="SSH端口"
@@ -77,7 +77,7 @@ export class EditingItem extends React.Component<EditingItemProps> {
             <Segment
               options={[
                 { text: '密码认证', value: 'password' },
-                { text: '密钥认证', value: 'cert' }
+                { text: '密钥认证', value: 'privateKey' }
               ]}
               value={machine.authWay}
               onChange={value => actions.installer.updateMachine({ authWay: value }, id)}
@@ -96,8 +96,8 @@ export class EditingItem extends React.Component<EditingItemProps> {
             />
           </Form.Item>
           <Form.Item
-            label="密码"
-            required
+            label={machine.authWay === 'privateKey' ? '私钥密码' : '密码'}
+            required={machine.authWay === 'privateKey' ? false : true}
             status={getValidateStatus(machine.v_password)}
             message={machine.v_password.message}
           >
@@ -108,19 +108,19 @@ export class EditingItem extends React.Component<EditingItemProps> {
             />
           </Form.Item>
           <Form.Item
-            label="证书"
+            label="私钥"
             required
-            status={getValidateStatus(machine.v_cert)}
-            message={machine.v_cert.message}
+            status={getValidateStatus(machine.v_privateKey)}
+            message={machine.v_privateKey.message}
             style={{
-              display: machine.authWay === 'cert' ? 'table-row' : 'none'
+              display: machine.authWay === 'privateKey' ? 'table-row' : 'none'
             }}
           >
             <Input
-              value={machine.cert}
+              value={machine.privateKey}
               multiline
               style={{ width: '400px' }}
-              onChange={cert => actions.installer.updateMachine({ cert }, id)}
+              onChange={privateKey => actions.installer.updateMachine({ privateKey }, id)}
             />
           </Form.Item>
         </Form>

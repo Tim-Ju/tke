@@ -13,8 +13,8 @@ export const initMachine = {
   v_user: initValidation,
   password: '',
   v_password: initValidation,
-  cert: '',
-  v_cert: initValidation
+  privateKey: '',
+  v_privateKey: initValidation
 };
 
 export const initArg = {
@@ -61,8 +61,8 @@ export const initEdit = {
   authType: 'tke',
   tenantID: '',
   v_tenantID: initValidation,
-  issueURL: '',
-  v_issueURL: initValidation,
+  issuerURL: '',
+  v_issuerURL: initValidation,
   clientID: '',
   v_clientID: initValidation,
   caCert: '',

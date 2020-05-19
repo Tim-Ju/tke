@@ -179,20 +179,27 @@ export const validateActions = {
   },
 
   _validateHost(host: string) {
+    // 支持多IP，用“;”分隔
     let reg = /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/,
       status = 0,
       message = '';
 
-    //验证访问地址
     if (!host) {
       status = 2;
       message = '访问地址不能为空';
-    } else if (!reg.test(host)) {
-      status = 2;
-      message = '访问地址格式不正确';
     } else {
-      status = 1;
-      message = '';
+      const hosts = host.split(';');
+
+      for (let key in hosts) {
+        if (!reg.test(hosts[key])) {
+          status = 2;
+          message = '访问地址格式不正确';
+          break;
+        } else {
+          status = 1;
+          message = '';
+        }
+      }
     }
 
     return { status, message };
@@ -270,6 +277,7 @@ export const validateActions = {
       }
     } else {
       status = 1;
+      message = '';
     }
 
     return { status, message };
@@ -282,15 +290,15 @@ export const validateActions = {
     };
   },
 
-  _validateCert(cert: string, way?: string) {
+  _validateMachinePrivateKey(privateKey: string, way?: string) {
     let status = 0,
       message = '';
 
-    //验证证书
-    if (way === 'cert') {
-      if (!cert) {
+    //验证私钥密码
+    if (way === 'privateKey') {
+      if (!privateKey) {
         status = 2;
-        message = '证书不能为空';
+        message = '私钥不能为空';
       } else {
         status = 1;
         message = '';
@@ -302,10 +310,10 @@ export const validateActions = {
     return { status, message };
   },
 
-  validateCert(cert?: string, way?: string, key?: string) {
+  validateMachinePrivateKey(privateKey?: string, way?: string, key?: string) {
     return dispatch => {
-      const v_cert = validateActions._validateCert(cert);
-      dispatch(installerActions.updateMachine({ v_cert }, key));
+      const v_privateKey = validateActions._validateMachinePrivateKey(privateKey);
+      dispatch(installerActions.updateMachine({ v_privateKey }, key));
     };
   },
 
@@ -315,7 +323,7 @@ export const validateActions = {
       validateActions._validatePort(machine.port).status === 1 &&
       validateActions._validateUser(machine.user).status === 1 &&
       validateActions._validateMachinePassword(machine.password, machine.authWay).status === 1 &&
-      validateActions._validateCert(machine.cert, machine.authWay).status === 1;
+      validateActions._validateMachinePrivateKey(machine.privateKey, machine.authWay).status === 1;
 
     return result;
   },
@@ -326,9 +334,9 @@ export const validateActions = {
         v_port = validateActions._validatePort(machine.port),
         v_user = validateActions._validateUser(machine.user),
         v_password = validateActions._validateMachinePassword(machine.password, machine.authWay),
-        v_cert = validateActions._validateCert(machine.cert, machine.authWay);
+        v_privateKey = validateActions._validateMachinePrivateKey(machine.privateKey, machine.authWay);
 
-      dispatch(installerActions.updateMachine({ v_host, v_port, v_user, v_password, v_cert }, machine.id));
+      dispatch(installerActions.updateMachine({ v_host, v_port, v_user, v_password, v_privateKey }, machine.id));
     };
   },
 
@@ -393,15 +401,15 @@ export const validateActions = {
     };
   },
 
-  _validateIssueUrl(issueUrl: string, authType?: string) {
+  _validateIssuerUrl(issuerURL: string, authType?: string) {
     let status = 0,
       message = '';
 
-    //验证IssueUrl
+    //验证IssuerUrl
     if (authType === 'oidc') {
-      if (!issueUrl) {
+      if (!issuerURL) {
         status = 2;
-        message = 'IssueUrl不能为空';
+        message = 'IssuerUrl不能为空';
       } else {
         status = 1;
         message = '';
@@ -414,10 +422,10 @@ export const validateActions = {
     return { status, message };
   },
 
-  validateIssueUrl(issueUrl?: string, authType?: string) {
+  validateIssuerUrl(issuerURL?: string, authType?: string) {
     return dispatch => {
-      const v_issueURL = validateActions._validateIssueUrl(issueUrl, authType);
-      dispatch(installerActions.updateEdit({ v_issueURL }));
+      const v_issuerURL = validateActions._validateIssuerUrl(issuerURL, authType);
+      dispatch(installerActions.updateEdit({ v_issuerURL }));
     };
   },
 
@@ -479,7 +487,7 @@ export const validateActions = {
 
   _validateStep3(editState: EditState) {
     let result =
-      validateActions._validateIssueUrl(editState.issueURL, editState.authType).status === 1 &&
+      validateActions._validateIssuerUrl(editState.issuerURL, editState.authType).status === 1 &&
       validateActions._validateClientID(editState.clientID, editState.authType).status === 1 &&
       validateActions._validateCaCert(editState.caCert, editState.authType).status === 1;
 
@@ -488,11 +496,11 @@ export const validateActions = {
 
   validateStep3(editState: EditState) {
     return dispatch => {
-      const v_issueURL = validateActions._validateIssueUrl(editState.issueURL, editState.authType),
+      const v_issuerURL = validateActions._validateIssuerUrl(editState.issuerURL, editState.authType),
         v_clientID = validateActions._validateClientID(editState.clientID, editState.authType),
         v_caCert = validateActions._validateCaCert(editState.caCert, editState.authType);
 
-      dispatch(installerActions.updateEdit({ v_issueURL, v_clientID, v_caCert }));
+      dispatch(installerActions.updateEdit({ v_issuerURL, v_clientID, v_caCert }));
     };
   },
 

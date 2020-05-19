@@ -74,7 +74,7 @@ export async function createCluster(edits: Array<EditState>) {
           if (m.password) {
             params['privatePassword'] = Base64.encode(m.password);
           }
-          params['privateKey'] = Base64.encode(m.cert);
+          params['privateKey'] = Base64.encode(m.privateKey);
         }
         let rsp = await axios.post(`http://${host}/api/ssh`, params);
         return rsp;
@@ -192,7 +192,7 @@ export async function createCluster(edits: Array<EditState>) {
                 if (m.password) {
                   mac['privatePassword'] = Base64.encode(m.password);
                 }
-                mac['privateKey'] = Base64.encode(m.cert);
+                mac['privateKey'] = Base64.encode(m.privateKey);
               }
               return mac;
             })
@@ -221,7 +221,7 @@ export async function createCluster(edits: Array<EditState>) {
       } else if (edits[0].authType === 'oidc') {
         params.config['auth'] = {
           oidc: {
-            issueURL: edits[0].issueURL,
+            issuerURL: edits[0].issuerURL,
             clientID: edits[0].clientID,
             caCert: Base64.encode(edits[0].caCert)
           }

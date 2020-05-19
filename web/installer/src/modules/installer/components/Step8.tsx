@@ -66,8 +66,8 @@ export class Step8 extends React.Component<RootProps> {
           </Form.Item>
           {editState.authType === 'oidc' ? (
             [
-              <Form.Item label="IssueUrl">
-                <Form.Text>{editState.issueURL}</Form.Text>
+              <Form.Item label="IssuerUrl">
+                <Form.Text>{editState.issuerURL}</Form.Text>
               </Form.Item>,
               <Form.Item label="ClientID">
                 <Form.Text>{editState.clientID}</Form.Text>

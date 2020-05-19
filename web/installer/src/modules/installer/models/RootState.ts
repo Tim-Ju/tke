@@ -64,8 +64,8 @@ export interface EditState extends Identifiable {
   authType?: string;
   tenantID?: string;
   v_tenantID?: Validation;
-  issueURL?: string;
-  v_issueURL?: Validation;
+  issuerURL?: string;
+  v_issuerURL?: Validation;
   clientID?: string;
   v_clientID?: Validation;
   caCert?: string;
@@ -121,11 +121,11 @@ export interface Machine extends Identifiable {
   v_host?: Validation;
   port?: string;
   v_port?: Validation;
-  authWay?: 'password' | 'cert';
+  authWay?: 'password' | 'privateKey';
   user?: string;
   v_user?: Validation;
   password?: string;
   v_password?: Validation;
-  cert?: string;
-  v_cert?: Validation;
+  privateKey?: string;
+  v_privateKey?: Validation;
 }

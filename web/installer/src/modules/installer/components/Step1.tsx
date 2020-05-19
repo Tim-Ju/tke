@@ -85,20 +85,28 @@ export class Step1 extends React.Component<RootProps> {
                 </Form>
               </div>
             ) : editState.haType === 'thirdParty' ? (
-              <div className="run-docker-box" style={{ marginTop: '10px', width: '100%' }}>
-                <Form>
-                  <Form.Item
-                    label="VIP地址"
-                    required
-                    status={getValidateStatus(editState.v_haThirdVip)}
-                    message={editState.v_haThirdVip.message}
-                  >
-                    <Input
-                      value={editState.haThirdVip}
-                      onChange={value => actions.installer.updateEdit({ haThirdVip: value })}
-                    />
-                  </Form.Item>
-                </Form>
+              <div>
+                <Text style={{ fontSize: '12px', marginTop: '5px', display: 'inline-block' }} theme="weak">
+                  使用已有LB，需要确保LB配置了如下端口转发规则，并且保证LB与master的网络连接正常，才能完成安装： <br />
+                  LB:80 => 所有master节点:80 <br />
+                  LB:443 => 所有master节点:443 <br />
+                  LB:6443 => 所有master节点:6443
+                </Text>
+                <div className="run-docker-box" style={{ marginTop: '10px', width: '100%' }}>
+                  <Form>
+                    <Form.Item
+                      label="VIP地址"
+                      required
+                      status={getValidateStatus(editState.v_haThirdVip)}
+                      message={editState.v_haThirdVip.message}
+                    >
+                      <Input
+                        value={editState.haThirdVip}
+                        onChange={value => actions.installer.updateEdit({ haThirdVip: value })}
+                      />
+                    </Form.Item>
+                  </Form>
+                </div>
               </div>
             ) : (
               <noscript />
